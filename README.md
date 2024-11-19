@@ -135,14 +135,6 @@ trivia-game/
 
 ---
 
-## Features to Add (Future Enhancements)
-- Add more categories and questions.
-- Timer functionality to add a challenge.
-- Multiplayer mode to compete with friends.
-- Enhanced UI/UX for better gameplay experience.
-
----
-
 ## Contribution
 Contributions are welcome! Feel free to submit a pull request or report issues.
 
