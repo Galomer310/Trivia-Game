@@ -40,4 +40,4 @@ Make sure you have the following installed on your system:
    ```bash
    git clone https://github.com/Galomer310/trivia-game.git
    cd trivia-game
-![Uploading image.png…]()
+
