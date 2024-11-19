@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Trivia Game</title>
+</head>
+<body>
+        <!-- Poster div -->
+        <div id="poster">
+            <img src="./images/trivia_poster.webp">
+        </div>
+
+    <div class="container">
+        <h1>Trivia Game</h1>
+        <!-- Dropdowns -->
+        <div class="filters">
+            <label for="category">Category:</label>
+            <select id="category">
+                <option value="">Any Category</option>
+            </select>
+
+            <label for="difficulty">Difficulty:</label>
+            <select id="difficulty">
+                <option value="">Any Difficulty</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+
+            <label for="type">Type:</label>
+            <select id="type">
+                <option value="">Any Type</option>
+                <option value="multiple">Multiple Choice</option>
+                <option value="boolean">True/False</option>
+            </select>
+
+            <button id="start">Start Game</button>
+        </div>
+
+        <!-- Trivia questions will go here -->
+        <div id="questions"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
