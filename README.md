@@ -1,6 +1,3 @@
-Here's the complete `README.md` file including **Setup Instructions** and detailed sections:
-
-```markdown
 # Trivia Challenge Game 🎮
 
 ## Overview
