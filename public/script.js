@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   let questions = [];
   let currentQuestionIndex = 0;
   let score = 0;
+  let selectedCategory = "";
+  let selectedDifficulty = "";
+  let selectedType = "";
 
   // Load categories from API
   async function loadCategories() {
@@ -38,11 +41,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
+    // Save selections globally
+    selectedCategory = category;
+    selectedDifficulty = difficulty;
+    selectedType = type;
+
     let url = `https://opentdb.com/api.php?amount=10&category=${category}&difficulty=${difficulty}&type=${type}`;
     try {
       const response = await fetch(url);
       const data = await response.json();
-
       questions = data.results;
       currentQuestionIndex = 0;
       score = 0;
@@ -65,18 +72,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const questionDiv = document.createElement("div");
     questionDiv.className = "question";
     questionDiv.innerHTML = `
-            <h3>${question.question}</h3>
-            <ul>
-                ${[...question.incorrect_answers, question.correct_answer]
-                  .sort(() => Math.random() - 0.5)
-                  .map((answer) => `<li>${answer}</li>`)
-                  .join("")}
-            </ul>
-        `;
+      <h3>${question.question}</h3>
+      <ul>
+        ${[...question.incorrect_answers, question.correct_answer]
+          .sort(() => Math.random() - 0.5)
+          .map((answer) => `<li>${answer}</li>`)
+          .join("")}
+      </ul>
+    `;
 
     questionsDiv.appendChild(questionDiv);
 
-    // Handle answer clicks
     const options = questionDiv.querySelectorAll("li");
     options.forEach((option) => {
       option.addEventListener("click", () =>
@@ -110,19 +116,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   // End game and save score
   async function endGame() {
     questionsDiv.innerHTML = `
-            <h2>Game Over!</h2>
-            <p>Your final score is: ${score} / ${questions.length}</p>
-        `;
+      <h2>Game Over!</h2>
+      <p>Your final score is: ${score} / ${questions.length}</p>
+    `;
 
     const playerName = prompt("Enter your name to save your score:");
     if (!playerName) return;
 
-    // Save score to the database (Updated API endpoint)
     try {
       const response = await fetch(`${API_BASE_URL}/api/scores`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ player_name: playerName, score }),
+        body: JSON.stringify({
+          player_name: playerName,
+          score,
+          category: selectedCategory,
+          difficulty: selectedDifficulty,
+          type: selectedType,
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to save score");
@@ -133,6 +144,18 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Error saving score:", error);
       alert("Error saving your score. Try again later.");
     }
+
+    addNewGameButton();
+  }
+
+  function addNewGameButton() {
+    const newGameButton = document.createElement("button");
+    newGameButton.textContent = "New Game";
+    newGameButton.style.marginTop = "20px";
+    newGameButton.addEventListener("click", () => {
+      window.location.reload();
+    });
+    questionsDiv.appendChild(newGameButton);
   }
 
   // Show leaderboard and player's rank
@@ -148,17 +171,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) + 1;
 
       questionsDiv.innerHTML += `
-                <h2>Leaderboard</h2>
-                <ol>
-                    ${leaderboard
-                      .map(
-                        (player) =>
-                          `<li>${player.player_name}: ${player.score}</li>`
-                      )
-                      .join("")}
-                </ol>
-                <p>Your rank: ${playerRank}</p>
-            `;
+        <h2>Leaderboard</h2>
+        <ol>
+          ${leaderboard
+            .map((player) => `<li>${player.player_name}: ${player.score}</li>`)
+            .join("")}
+        </ol>
+        <p>Your rank: ${playerRank}</p>
+      `;
     } catch (error) {
       console.error("Error fetching leaderboard:", error);
       alert("Error loading leaderboard. Try again later.");
